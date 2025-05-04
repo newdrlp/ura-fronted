@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>URA Médica - Dr. Lucas</title>
+</head>
+<body>
+  <h2>Fale com a URA do Dr. Lucas</h2>
+  <label for="pergunta">Digite sua pergunta:</label><br>
+  <input type="text" id="pergunta" size="50" />
+  <button onclick="enviarPergunta()">Enviar</button>
+
+  <h3>Resposta:</h3>
+  <div id="resposta" style="font-weight: bold;"></div>
+
+  <script>
+    async function enviarPergunta() {
+      const pergunta = document.getElementById('pergunta').value;
+
+      const respostaEl = document.getElementById('resposta');
+      respostaEl.textContent = 'Carregando...';
+
+      try {
+        const response = await fetch('https://ura-node-service-production.up.railway.app/pergunta', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ pergunta })
+        });
+
+        const data = await response.json();
+        respostaEl.textContent = data.resposta || 'Sem resposta.';
+      } catch (err) {
+        respostaEl.textContent = 'Erro ao conectar com o servidor.';
+      }
+    }
+  </script>
+</body>
+</html>
