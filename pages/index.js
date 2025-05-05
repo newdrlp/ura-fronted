@@ -1,13 +1,14 @@
+// pages/index.js
 import { useState } from 'react';
 
 export default function Home() {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    const res = await fetch('https://ura-backend.vercel.app/api/chat', {
+    const response = await fetch('https://ura-backend.vercel.app/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -15,24 +16,28 @@ export default function Home() {
       body: JSON.stringify({ question }),
     });
 
-    const data = await res.json();
-    setAnswer(data.answer || 'Erro ao obter resposta.');
-  };
+    const data = await response.json();
+    setAnswer(data.answer || 'Erro ao obter resposta');
+  }
 
   return (
-    <div style={{ padding: '40px', fontFamily: 'Arial' }}>
-      <h1>Fale com a URA do Dr. Lucas</h1>
+    <div style={{ padding: '2rem' }}>
+      <h1>URA Médica - Dr. Lucas</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Digite sua pergunta"
-          style={{ width: '300px', marginRight: '10px' }}
+          style={{ width: '300px', padding: '0.5rem' }}
         />
-        <button type="submit">Enviar</button>
+        <button type="submit" style={{ marginLeft: '1rem' }}>Enviar</button>
       </form>
-      <p><strong>Resposta:</strong> {answer}</p>
+      {answer && (
+        <div style={{ marginTop: '2rem' }}>
+          <strong>Resposta:</strong> {answer}
+        </div>
+      )}
     </div>
   );
 }
